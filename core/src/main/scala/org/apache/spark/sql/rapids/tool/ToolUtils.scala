@@ -257,7 +257,8 @@ object ToolUtils extends Logging {
    *         the string sep.
    */
   def renderTextField(values: Seq[Any], separator: String, txtDelimiter: String): String = {
-    replaceDelimiter(values.mkString(separator), txtDelimiter)
+    // replaceDelimiter(values.mkString(separator), txtDelimiter)
+    values.mkString(separator)
   }
 
   def formatComplexTypes(

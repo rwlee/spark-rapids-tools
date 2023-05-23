@@ -72,19 +72,20 @@ object ProfileUtils {
   // if a string contains what we are going to use for a delimiter, replace
   // it with something else
   def replaceDelimiter(str: String, delimiter: String): String = {
-    if (str != null && str.contains(delimiter)) {
-      val replaceWith = if (delimiter.equals(",")) {
-        ";"
-      } else if (delimiter.equals(";")) {
-        ":"
-      } else if (delimiter.equals("|")) {
-        ":"
-      } else {
-        ";"
-      }
-      str.replace(delimiter, replaceWith)
-    } else {
-      str
-    }
+    str
+    // if (str != null && str.contains(delimiter)) {
+    //   val replaceWith = if (delimiter.equals(",")) {
+    //     ";"
+    //   } else if (delimiter.equals(";")) {
+    //     ":"
+    //   } else if (delimiter.equals("|")) {
+    //     ":"
+    //   } else {
+    //     ";"
+    //   }
+    //   str.replace(delimiter, replaceWith)
+    // } else {
+    //   str
+    // }
   }
 }

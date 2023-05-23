@@ -20,7 +20,6 @@ import scala.collection.mutable.{Buffer, LinkedHashMap, ListBuffer}
 
 import com.nvidia.spark.rapids.tool.ToolTextFileWriter
 import com.nvidia.spark.rapids.tool.planparser.{ExecInfo, PlanInfo}
-import com.nvidia.spark.rapids.tool.profiling.ProfileUtils.replaceDelimiter
 import com.nvidia.spark.rapids.tool.qualification.QualOutputWriter.{CLUSTER_ID, CLUSTER_ID_STR_SIZE, JOB_ID, JOB_ID_STR_SIZE, RUN_NAME, RUN_NAME_STR_SIZE, TEXT_DELIMITER}
 import org.apache.hadoop.conf.Configuration
 
@@ -654,7 +653,8 @@ object QualOutputWriter {
     val sqlDescTruncated = escapedMetaStr.substring(0,
       Math.min(maxSQLDescLength, escapedMetaStr.length))
     // should be a one for one replacement so length wouldn't be affected by this
-    replaceDelimiter(sqlDescTruncated, delimiter)
+    // replaceDelimiter(sqlDescTruncated, delimiter)
+    sqlDescTruncated
   }
 
   def constructPerSqlSummaryInfo(
