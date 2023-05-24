@@ -595,20 +595,20 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
       ("", ""),
       ("map<string;string>", ""),
       ("array<string>", ""),
-      ("array<struct<name:string;price:decimal(8;2);author:string;pages:int>>;" +
-          "array<map<name:string;author:string>>;array<array<struct<name:string;pages:int>>>",
-          "array<struct<name:string;price:decimal(8;2);author:string;pages:int>>;" +
-              "array<map<name:string;author:string>>;array<array<struct<name:string;pages:int>>>"),
-      ("struct<fn:string;mn:array<string>;ln:string>;" +
-          "struct<cur:struct<st:string;city:string>;previous:struct<st:map<string;string>;" +
-          "city:string>>;struct<fn:string;ln:string>",
-          "struct<fn:string;mn:array<string>;ln:string>;" +
-              "struct<cur:struct<st:string;city:string>;previous:struct<st:map<string;string>;" +
+      ("array<struct<name:string,price:decimal(8,2),author:string,pages:int>>," +
+          "array<map<name:string,author:string>>,array<array<struct<name:string,pages:int>>>",
+          "array<struct<name:string,price:decimal(8,2),author:string,pages:int>>," +
+              "array<map<name:string,author:string>>,array<array<struct<name:string,pages:int>>>"),
+      ("struct<fn:string,mn:array<string>,ln:string>," +
+          "struct<cur:struct<st:string,city:string>,previous:struct<st:map<string,string>," +
+          "city:string>>,struct<fn:string,ln:string>",
+          "struct<fn:string,mn:array<string>,ln:string>," +
+              "struct<cur:struct<st:string,city:string>,previous:struct<st:map<string,string>," +
               "city:string>>"),
-      ("map<id:int;map<fn:string;ln:string>>;map<id:int;struct<st:string;city:string>>;" +
-          "map<id:int;order:array<map<oname:string;oid:int>>>;map<name:string;active:string>",
-          "map<id:int;map<fn:string;ln:string>>;map<id:int;struct<st:string;city:string>>;" +
-              "map<id:int;order:array<map<oname:string;oid:int>>>"))
+      ("map<id:int,map<fn:string,ln:string>>,map<id:int,struct<st:string,city:string>>," +
+          "map<id:int,order:array<map<oname:string,oid:int>>>,map<name:string,active:string>",
+          "map<id:int,map<fn:string,ln:string>>,map<id:int,struct<st:string,city:string>>," +
+              "map<id:int,order:array<map<oname:string,oid:int>>>"))
 
     val result = testSchemas.map(x => AppBase.parseReadSchemaForNestedTypes(x))
     result.foreach { actualResult =>
