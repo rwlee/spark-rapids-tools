@@ -593,27 +593,27 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
     val expectedResult = List(
       ("", ""),
       ("", ""),
-      ("map<string;string>", ""),
+      ("map<string,string>", ""),
       ("array<string>", ""),
-      ("array<struct<name:string,price:decimal(8,2),author:string,pages:int>>," +
-          "array<map<name:string,author:string>>,array<array<struct<name:string,pages:int>>>",
-          "array<struct<name:string,price:decimal(8,2),author:string,pages:int>>," +
-              "array<map<name:string,author:string>>,array<array<struct<name:string,pages:int>>>"),
-      ("struct<fn:string,mn:array<string>,ln:string>," +
+      ("array<struct<name:string,price:decimal(8,2),author:string,pages:int>>;" +
+          "array<map<name:string,author:string>>;array<array<struct<name:string,pages:int>>>",
+          "array<struct<name:string,price:decimal(8,2),author:string,pages:int>>;" +
+              "array<map<name:string,author:string>>;array<array<struct<name:string,pages:int>>>"),
+      ("struct<fn:string,mn:array<string>,ln:string>;" +
           "struct<cur:struct<st:string,city:string>,previous:struct<st:map<string,string>," +
-          "city:string>>,struct<fn:string,ln:string>",
-          "struct<fn:string,mn:array<string>,ln:string>," +
+          "city:string>>;struct<fn:string,ln:string>",
+          "struct<fn:string,mn:array<string>,ln:string>;" +
               "struct<cur:struct<st:string,city:string>,previous:struct<st:map<string,string>," +
               "city:string>>"),
-      ("map<id:int,map<fn:string,ln:string>>,map<id:int,struct<st:string,city:string>>," +
-          "map<id:int,order:array<map<oname:string,oid:int>>>,map<name:string,active:string>",
-          "map<id:int,map<fn:string,ln:string>>,map<id:int,struct<st:string,city:string>>," +
+      ("map<id:int,map<fn:string,ln:string>>;map<id:int,struct<st:string,city:string>>;" +
+          "map<id:int,order:array<map<oname:string,oid:int>>>;map<name:string,active:string>",
+          "map<id:int,map<fn:string,ln:string>>;map<id:int,struct<st:string,city:string>>;" +
               "map<id:int,order:array<map<oname:string,oid:int>>>"))
 
     val result = testSchemas.map(x => AppBase.parseReadSchemaForNestedTypes(x))
     result.foreach { actualResult =>
-      assert(ToolUtils.formatComplexTypes(actualResult._1).equals(expectedResult(index)._1))
-      assert(ToolUtils.formatComplexTypes(actualResult._2).equals(expectedResult(index)._2))
+      assert(ToolUtils.formatComplexTypes(actualResult._1) == (expectedResult(index)._1))
+      assert(ToolUtils.formatComplexTypes(actualResult._2) == (expectedResult(index)._2))
       index += 1
     }
   }
@@ -910,7 +910,7 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
         spark.sparkContext.addSparkListener(listener)
         import spark.implicits._
         val testData = Seq((1, 2), (3, 4)).toDF("a", "b")
-        spark.sparkContext.setJobDescription("testing, csv delimiter; replacement")
+        spark.sparkContext.setJobDescription("testing, csv delimiter, replacement")
         testData.createOrReplaceTempView("t1")
         testData.createOrReplaceTempView("t2")
         spark.sql("SELECT a, MAX(b) FROM (SELECT t1.a, t2.b " +
@@ -944,8 +944,8 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
         val rows = dfPerSqlActual.collect()
         assert(rows.size == 3)
         val firstRow = rows(1)
-        // , should be replaced with ;
-        assert(firstRow(3) == "testing; csv delimiter; replacement")
+        // , should not be replaced with ; or any other delim
+        assert(firstRow(3) == "testing, csv delimiter, replacement")
 
         // parse results from listener
         val executorCpuTime = listener.executorCpuTime
@@ -961,6 +961,7 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
     }
   }
 
+// should get updated
   test("running qualification print unsupported Execs and Exprs") {
     TrampolineUtil.withTempDir { eventLogDir =>
       val qualApp = new RunningQualificationApp()
@@ -1127,6 +1128,7 @@ class QualificationSuite extends FunSuite with BeforeAndAfterEach with Logging {
     }
   }
 
+// should get updated
   test("running qualification app files with per sql") {
     TrampolineUtil.withTempPath { outParquetFile =>
       TrampolineUtil.withTempPath { outJsonFile =>

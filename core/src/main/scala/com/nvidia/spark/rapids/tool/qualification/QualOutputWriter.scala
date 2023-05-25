@@ -20,6 +20,7 @@ import scala.collection.mutable.{Buffer, LinkedHashMap, ListBuffer}
 
 import com.nvidia.spark.rapids.tool.ToolTextFileWriter
 import com.nvidia.spark.rapids.tool.planparser.{ExecInfo, PlanInfo}
+import com.nvidia.spark.rapids.tool.profiling.ProfileUtils.replaceDelimiter
 import com.nvidia.spark.rapids.tool.qualification.QualOutputWriter.{CLUSTER_ID, CLUSTER_ID_STR_SIZE, JOB_ID, JOB_ID_STR_SIZE, RUN_NAME, RUN_NAME_STR_SIZE, TEXT_DELIMITER}
 import org.apache.hadoop.conf.Configuration
 
@@ -480,10 +481,6 @@ object QualOutputWriter {
     if (str.isEmpty) "\"\"" else str
   }
 
-  private def reformatCSVString(str: String): String = {
-    "\"" + str.replace("\"", "\"\"") + "\""
-  }
-
   private def stringLengthExceedsMax(str: String, strSize: Int, delimiter: String): String = {
     val prettyPrintValue = if (str.size > strSize) {
       val newStrSize = strSize - 3 // suffixing ... at the end
@@ -653,8 +650,8 @@ object QualOutputWriter {
     val sqlDescTruncated = escapedMetaStr.substring(0,
       Math.min(maxSQLDescLength, escapedMetaStr.length))
     // should be a one for one replacement so length wouldn't be affected by this
-    // replaceDelimiter(sqlDescTruncated, delimiter)
-    sqlDescTruncated
+    replaceDelimiter(sqlDescTruncated, delimiter)
+    // sqlDescTruncated
   }
 
   def constructPerSqlSummaryInfo(
@@ -666,7 +663,7 @@ object QualOutputWriter {
       maxSQLDescLength: Int,
       reformatCSV: Boolean = true): String = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => str
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => str
     val data = ListBuffer[(String, Int)](
       reformatCSVFunc(sumInfo.info.appName) -> headersAndSizes(APP_NAME_STR),
       reformatCSVFunc(sumInfo.info.appId) -> appIdMaxSize,
@@ -712,7 +709,7 @@ object QualOutputWriter {
       prettyPrint: Boolean,
       reformatCSV: Boolean = true): Seq[String] = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => stringIfempty(str)
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => stringIfempty(str)
     val appId = sumInfo.appId
     sumInfo.mlFunctions.get.map { info =>
       val data = ListBuffer[(String, Int)](
@@ -732,7 +729,7 @@ object QualOutputWriter {
       prettyPrint: Boolean,
       reformatCSV: Boolean = true): Seq[String] = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => stringIfempty(str)
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => stringIfempty(str)
     val appId = sumInfo.appId
     sumInfo.mlFunctionsStageDurations.get.map { info =>
       val data = ListBuffer[(String, Int)](
@@ -779,7 +776,7 @@ object QualOutputWriter {
       headersAndSizes: LinkedHashMap[String, Int],
       reformatCSV: Boolean = true): String = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => stringIfempty(str)
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => stringIfempty(str)
     val data = ListBuffer[(String, Int)](
       reformatCSVFunc(appId) -> headersAndSizes(APP_ID_STR),
       info.sqlID.toString -> headersAndSizes(SQL_ID_STR),
@@ -818,7 +815,7 @@ object QualOutputWriter {
       prettyPrint: Boolean,
       reformatCSV: Boolean = true): Seq[String] = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => stringIfempty(str)
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => stringIfempty(str)
     val appId = sumInfo.appId
     sumInfo.stageInfo.map { info =>
       val data = ListBuffer[(String, Int)](
@@ -898,7 +895,7 @@ object QualOutputWriter {
       reportReadSchema: Boolean = false,
       reformatCSV: Boolean = true): ListBuffer[(String, Int)] = {
     val reformatCSVFunc : String => String =
-      if (reformatCSV) str => reformatCSVString(str) else str => stringIfempty(str)
+      if (reformatCSV) str => ToolUtils.reformatCSVString(str) else str => stringIfempty(str)
     val data = ListBuffer[(String, Int)](
       reformatCSVFunc(appInfo.appName) -> headersAndSizes(APP_NAME_STR),
       reformatCSVFunc(appInfo.appId) -> headersAndSizes(APP_ID_STR),
