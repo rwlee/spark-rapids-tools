@@ -481,6 +481,10 @@ object QualOutputWriter {
     if (str.isEmpty) "\"\"" else str
   }
 
+  private def reformatCSVString(str: String): String = {
+    "\"" + str.replace("\"", "\"\"") + "\""
+  }
+
   private def stringLengthExceedsMax(str: String, strSize: Int, delimiter: String): String = {
     val prettyPrintValue = if (str.size > strSize) {
       val newStrSize = strSize - 3 // suffixing ... at the end
