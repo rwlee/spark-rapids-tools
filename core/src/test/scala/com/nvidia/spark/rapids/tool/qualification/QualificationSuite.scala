@@ -941,7 +941,6 @@ class QualificationSuite extends BaseTestSuite {
     }
   }
 
-// should get updated
   test("running qualification print unsupported Execs and Exprs") {
     TrampolineUtil.withTempDir { eventLogDir =>
       val qualApp = new RunningQualificationApp()
@@ -1108,7 +1107,6 @@ class QualificationSuite extends BaseTestSuite {
     }
   }
 
-// should get updated
   test("running qualification app files with per sql") {
     TrampolineUtil.withTempPath { outParquetFile =>
       TrampolineUtil.withTempPath { outJsonFile =>
