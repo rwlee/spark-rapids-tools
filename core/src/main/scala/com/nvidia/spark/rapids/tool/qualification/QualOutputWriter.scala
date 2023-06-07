@@ -25,8 +25,8 @@ import com.nvidia.spark.rapids.tool.qualification.QualOutputWriter.{CLUSTER_ID, 
 import org.apache.hadoop.conf.Configuration
 
 import org.apache.spark.sql.rapids.tool.ToolUtils
-import org.apache.spark.sql.rapids.tool.util.StringUtils
 import org.apache.spark.sql.rapids.tool.qualification.{EstimatedPerSQLSummaryInfo, EstimatedSummaryInfo, QualificationAppInfo, QualificationSummaryInfo}
+import org.apache.spark.sql.rapids.tool.util.StringUtils
 /**
  * This class handles the output files for qualification.
  * It can write both a raw csv file and then a text summary report.

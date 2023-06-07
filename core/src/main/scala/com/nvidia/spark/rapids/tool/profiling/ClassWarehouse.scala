@@ -108,8 +108,9 @@ case class JobInfoProfileResult(
   }
   override def convertToCSVSeq: Seq[String] = {
     val stageIdStr = s"[${stageIds.mkString(",")}]"
-    Seq(appIndex.toString, jobID.toString, StringUtils.reformatCSVString(stageIdStr), sqlID.map(_.toString).getOrElse(null),
-      startTime.toString, endTime.map(_.toString).getOrElse(null))
+    Seq(appIndex.toString, jobID.toString, StringUtils.reformatCSVString(stageIdStr),
+      sqlID.map(_.toString).getOrElse(null), startTime.toString,
+      endTime.map(_.toString).getOrElse(null))
   }
 }
 
@@ -160,9 +161,10 @@ extends ProfileResult {
       location, pushedFilters, schema)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, sqlID.toString, nodeId.toString, StringUtils.reformatCSVString(format), buffer_time.toString,
-      scan_time.toString, data_size.toString, decode_time.toString,
-      StringUtils.reformatCSVString(location), StringUtils.reformatCSVString(pushedFilters), StringUtils.reformatCSVString(schema))
+    Seq(appIndex.toString, sqlID.toString, nodeId.toString, StringUtils.reformatCSVString(format),
+      buffer_time.toString, scan_time.toString, data_size.toString, decode_time.toString,
+      StringUtils.reformatCSVString(location), StringUtils.reformatCSVString(pushedFilters),
+      StringUtils.reformatCSVString(schema))
   }
 }
 
@@ -194,8 +196,10 @@ case class SQLAccumProfileResults(appIndex: Int, sqlID: Long, nodeID: Long,
       name, max_value.toString, metricType, stageIds)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, sqlID.toString, nodeID.toString, StringUtils.reformatCSVString(nodeName), accumulatorId.toString,
-      StringUtils.reformatCSVString(name), max_value.toString, StringUtils.reformatCSVString(metricType), StringUtils.reformatCSVString(stageIds))
+    Seq(appIndex.toString, sqlID.toString, nodeID.toString,
+      StringUtils.reformatCSVString(nodeName), accumulatorId.toString,
+      StringUtils.reformatCSVString(name), max_value.toString,
+      StringUtils.reformatCSVString(metricType), StringUtils.reformatCSVString(stageIds))
   }
 }
 
@@ -226,7 +230,8 @@ case class ExecutorsRemovedProfileResult(appIndex: Int,
     Seq(appIndex.toString, executorID, time.toString, reason)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, StringUtils.reformatCSVString(executorID), time.toString, StringUtils.reformatCSVString(reason))
+    Seq(appIndex.toString, StringUtils.reformatCSVString(executorID), time.toString,
+      StringUtils.reformatCSVString(reason))
   }
 }
 
@@ -275,9 +280,10 @@ case class AppInfoProfileResults(appIndex: Int, appName: String,
       durationStr, sparkVersion, pluginEnabled.toString)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, StringUtils.reformatCSVString(appName), StringUtils.reformatCSVString(appId.getOrElse("")),//this will likely need to switch to a reformat specific if else inside the getorelse
-      StringUtils.reformatCSVString(sparkUser),  startTime.toString, endTimeToStr, durToStr,
-      StringUtils.reformatCSVString(durationStr), StringUtils.reformatCSVString(sparkVersion), pluginEnabled.toString)
+    Seq(appIndex.toString, StringUtils.reformatCSVString(appName),
+      StringUtils.reformatCSVString(appId.getOrElse("")), StringUtils.reformatCSVString(sparkUser),
+      startTime.toString, endTimeToStr, durToStr, StringUtils.reformatCSVString(durationStr),
+      StringUtils.reformatCSVString(sparkVersion), pluginEnabled.toString)
   }
 }
 
@@ -291,7 +297,8 @@ case class AppLogPathProfileResults(appIndex: Int, appName: String,
       eventLogPath)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, StringUtils.reformatCSVString(appName), StringUtils.reformatCSVString(appId.getOrElse("")),
+    Seq(appIndex.toString, StringUtils.reformatCSVString(appName),
+      StringUtils.reformatCSVString(appId.getOrElse("")),
       StringUtils.reformatCSVString(eventLogPath))
   }
 }
@@ -404,7 +411,8 @@ case class FailedTaskProfileResults(appIndex: Int, stageId: Int, stageAttemptId:
   }
   override def convertToCSVSeq: Seq[String] = {
     Seq(appIndex.toString, stageId.toString, stageAttemptId.toString,
-      taskId.toString, taskAttemptId.toString, StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
+      taskId.toString, taskAttemptId.toString,
+      StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
   }
 }
 
@@ -418,7 +426,8 @@ case class FailedStagesProfileResults(appIndex: Int, stageId: Int, stageAttemptI
   }
   override def convertToCSVSeq: Seq[String] = {
     Seq(appIndex.toString, stageId.toString, stageAttemptId.toString,
-      StringUtils.reformatCSVString(name), numTasks.toString, StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
+      StringUtils.reformatCSVString(name), numTasks.toString,
+      StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
   }
 }
 
@@ -431,8 +440,8 @@ case class FailedJobsProfileResults(appIndex: Int, jobId: Int,
       jobResult, ProfileUtils.truncateFailureStr(endReason))
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, jobId.toString,
-      StringUtils.reformatCSVString(jobResult), StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
+    Seq(appIndex.toString, jobId.toString, StringUtils.reformatCSVString(jobResult),
+      StringUtils.reformatCSVString(ProfileUtils.truncateFailureStr(endReason)))
   }
 }
 
@@ -775,8 +784,9 @@ case class SQLDurationExecutorTimeProfileResult(appIndex: Int, appId: String, sq
       appDurStr, potentialStr, execCpuTimePercent)
   }
   override def convertToCSVSeq: Seq[String] = {
-    Seq(appIndex.toString, StringUtils.reformatCSVString(appId), sqlID.toString, durStr, containsDataset.toString,
-      appDurStr, StringUtils.reformatCSVString(potentialStr), execCpuTimePercent)
+    Seq(appIndex.toString, StringUtils.reformatCSVString(appId), sqlID.toString, durStr,
+      containsDataset.toString, appDurStr, StringUtils.reformatCSVString(potentialStr),
+      execCpuTimePercent)
   }
 }
 
